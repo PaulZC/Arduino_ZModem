@@ -1,7 +1,25 @@
-#include "Arduino.h"
-#include <avr/pgmspace.h>
+// A fork of ecm-bitflipper's Arduino_ZModem: https://github.com/ecm-bitflipper/Arduino_ZModem
+// tweaked to let it run on the Adafruit Feather M0 Adalogger: https://www.adafruit.com/products/2796
+// using Bill Greiman's SdFat: https://github.com/greiman/SdFat
+
+// Works OK with Hilgraeve HyperTerminal: https://www.hilgraeve.com/hyperterminal/
+// Haven't yet got it working with ExtraPuTTY: http://www.extraputty.com/
+
+// Default baud rates and the SD chip select pin are defined in zmodem_config.h
+
+// zmodem_fixes.h includes two tweaks to let the code compile for the Feather M0
+
+// Commented out by Paul: #include "Arduino.h"
+// Commented out by Paul: #include <avr/pgmspace.h>
 
 #include <SPI.h>
+
+#include "zmodem_config.h"
+
+#include "zmodem.h"
+#include "zmodem_zm.h"
+
+/* Original comments by ecm-bitflipper:
 
 // Arghhh. These three links have disappeared!
 // See this page for the original code:
@@ -11,17 +29,13 @@
 // The minix files here might be the same thing:
 // http://www.cise.ufl.edu/~cop4600/cgi-bin/lxr/http/source.cgi/commands/zmodem/
 
-#include "zmodem_config.h"
-
-#include "zmodem.h"
-#include "zmodem_zm.h"
-
 // This works with Tera Term Pro Web Version 3.1.3 (2002/10/08)
 // (www.ayera.com) but TeraTerm only works on COM1, 2, 3 or 4.
 
 // It DOES NOT handle interruptions of the Tx or Rx lines so it
 // will NOT work in a hostile environment.
- 
+*/
+
 /*
   Originally was an example by fat16lib of reading a directory
   and listing its files by directory entry number.
@@ -121,7 +135,7 @@ V2.00
 */
 
 #include <SdFat.h>
-#include <SdFatUtil.h>
+// Commented out by Paul: #include <SdFatUtil.h>
 
 SdFat sd;
 
@@ -171,6 +185,7 @@ void help(void)
   DSERIALprintln(F("DIR      - List files in current working directory - alternate LS")); DSERIAL.flush();
   DSERIALprintln(F("PWD      - Print current working directory")); DSERIAL.flush();
   DSERIALprintln(F("CD       - Change current working directory")); DSERIAL.flush();
+  DSERIALprintln(F("CD /     - Return to the home directory")); DSERIAL.flush(); // Added by Paul
 #ifdef ARDUINO_SMALL_MEMORY_INCLUDE_FILE_MGR
   DSERIALprintln(F("DEL file - Delete file - alternate RM")); DSERIAL.flush();
   DSERIALprintln(F("MD  dir  - Create dir - alternate MKDIR")); DSERIAL.flush();
@@ -203,6 +218,9 @@ void setup()
 //  DSERIAL.begin(115200);
 
   ZSERIAL.begin(ZMODEM_SPEED);
+
+  while(!ZSERIAL) ; // Added by Paul - wait until the serial console is opened
+  
   ZSERIAL.setTimeout(TYPICAL_SERIAL_TIMEOUT);
 
 //  DSERIALprintln(Progname);

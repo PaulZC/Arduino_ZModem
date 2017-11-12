@@ -13,7 +13,7 @@
 #ifndef SFMP3_SHIELD
 // Make sure you set this correctly to define the pin where you have connected your SDCard's
 // CS pin!
-#define SD_SEL 9
+#define SD_SEL 4 // Changed by Paul to match the Adafruit Feather M0 Adalogger
 #endif
 
 // Serial output for debugging info
@@ -26,7 +26,7 @@
 #define ZSERIAL Serial
 
 // Dylan (monte_carlo_ecm, bitflipper, etc.) - Adjust the baud rate to suit your board and needs
-#define ZMODEM_SPEED 57600
+#define ZMODEM_SPEED 115200 // Changed by Paul from 57600
 
 // Dylan (monte_carlo_ecm, bitflipper, etc.) - For smaller boards (32K flash, 2K RAM) it may only
 // be possible to have only one or some of the following 3 features enabled at a time:  1) File manager

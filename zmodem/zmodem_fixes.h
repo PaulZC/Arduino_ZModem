@@ -6,6 +6,7 @@ From: http://stackoverflow.com/questions/2607853/why-prototype-is-used-header-fi
 #ifndef ZMODEM_FIXES_H
 #define ZMODEM_FIXES_H
 
+#define SERIAL_TX_BUFFER_SIZE SERIAL_BUFFER_SIZE // Added by Paul
 
 ////////////////////////////////////////////////////////
 
@@ -24,7 +25,7 @@ extern SdFat sd;
 #define READCHECK
 #define TYPICAL_SERIAL_TIMEOUT 1200
 
-#define readline(timeout) ({ byte _c; ZSERIAL.readBytes(&_c, 1) > 0 ? _c : TIMEOUT; })
+#define readline(timeout) ({ char _c; ZSERIAL.readBytes(&_c, 1) > 0 ? _c : TIMEOUT; }) // Paul changed byte to char
 int zdlread2(int);
 #define zdlread(void) ({ int _z; ((_z = readline(Rxtimeout)) & 0140) ? _z : zdlread2(_z); })
 //#define sendline(_c) ZSERIAL.write(char(_c))
